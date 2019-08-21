@@ -1,5 +1,5 @@
 # Contao Component Bootstrap
-Stores the Bootstrap Package in `assets/contao-component-Bootstrap`
+Stores the Bootstrap Package in `assets/contao-component-bootstrap`
 
 ## Embed bootstrap in your custom sass file
 f.ex if your main.scss is located in `files/mytheme/scss/main.scss` you can import bootstrap like this:
@@ -9,6 +9,7 @@ f.ex if your main.scss is located in `files/mytheme/scss/main.scss` you can impo
  files/mytheme/scss/main.scss
  **/
 
+// Import the bootstrap component from the assets directory
 @import "../../../assets/contao-component-bootstrap/bootstrap/scss/bootstrap.scss";
 
 // Import some other custom style definitions
