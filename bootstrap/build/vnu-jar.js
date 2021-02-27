@@ -2,9 +2,9 @@
 
 /*!
  * Script to run vnu-jar if Java is available.
- * Copyright 2017-2020 The Bootstrap Authors
- * Copyright 2017-2020 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Copyright 2017-2021 The Bootstrap Authors
+ * Copyright 2017-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
 'use strict'
@@ -33,15 +33,16 @@ childProcess.exec('java -version', (error, stdout, stderr) => {
     // Content → Reboot uses various date/time inputs as a visual example.
     // Documentation does not rely on them being usable.
     'The “date” input type is not supported in all browsers.*',
-    'The “time” input type is not supported in all browsers.*',
-    // IE11 doesn't recognise <main> / give the element an implicit "main" landmark.
-    // Explicit role="main" is redundant for other modern browsers, but still valid.
-    'The “main” role is unnecessary for element “main”.'
+    'The “week” input type is not supported in all browsers.*',
+    'The “month” input type is not supported in all browsers.*',
+    'The “color” input type is not supported in all browsers.*',
+    'The “datetime-local” input type is not supported in all browsers.*',
+    'The “time” input type is not supported in all browsers.*'
   ].join('|')
 
   const args = [
     '-jar',
-    vnu,
+    `"${vnu}"`,
     '--asciiquotes',
     '--skip-non-html',
     // Ignore the language code warnings
