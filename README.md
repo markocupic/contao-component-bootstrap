@@ -1,3 +1,5 @@
+![Logo](https://github.com/markocupic/markocupic/blob/main/logo.png)
+
 # Contao Component Bootstrap
 Stores the Bootstrap Package in `assets/contao-component-bootstrap`
 

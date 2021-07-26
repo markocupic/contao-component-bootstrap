@@ -27,7 +27,24 @@ describe('Collapse', () => {
     })
   })
 
+  describe('DATA_KEY', () => {
+    it('should return plugin data key', () => {
+      expect(Collapse.DATA_KEY).toEqual('bs.collapse')
+    })
+  })
+
   describe('constructor', () => {
+    it('should take care of element either passed as a CSS selector or DOM element', () => {
+      fixtureEl.innerHTML = '<div class="my-collapse"></div>'
+
+      const collapseEl = fixtureEl.querySelector('div.my-collapse')
+      const collapseBySelector = new Collapse('div.my-collapse')
+      const collapseByElement = new Collapse(collapseEl)
+
+      expect(collapseBySelector._element).toEqual(collapseEl)
+      expect(collapseByElement._element).toEqual(collapseEl)
+    })
+
     it('should allow jquery object in parent config', () => {
       fixtureEl.innerHTML = [
         '<div class="my-collapse">',
@@ -41,7 +58,8 @@ describe('Collapse', () => {
       const collapseEl = fixtureEl.querySelector('div.collapse')
       const myCollapseEl = fixtureEl.querySelector('.my-collapse')
       const fakejQueryObject = {
-        0: myCollapseEl
+        0: myCollapseEl,
+        jquery: 'foo'
       }
       const collapse = new Collapse(collapseEl, {
         parent: fakejQueryObject
@@ -793,7 +811,7 @@ describe('Collapse', () => {
 
       jQueryMock.fn.collapse.call(jQueryMock)
 
-      expect(Collapse.getInstance(div)).toBeDefined()
+      expect(Collapse.getInstance(div)).not.toBeNull()
     })
 
     it('should not re create a collapse', () => {
@@ -842,6 +860,60 @@ describe('Collapse', () => {
       const div = fixtureEl.querySelector('div')
 
       expect(Collapse.getInstance(div)).toEqual(null)
+    })
+  })
+
+  describe('getOrCreateInstance', () => {
+    it('should return collapse instance', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+      const collapse = new Collapse(div)
+
+      expect(Collapse.getOrCreateInstance(div)).toEqual(collapse)
+      expect(Collapse.getInstance(div)).toEqual(Collapse.getOrCreateInstance(div, {}))
+      expect(Collapse.getOrCreateInstance(div)).toBeInstanceOf(Collapse)
+    })
+
+    it('should return new instance when there is no collapse instance', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+
+      expect(Collapse.getInstance(div)).toEqual(null)
+      expect(Collapse.getOrCreateInstance(div)).toBeInstanceOf(Collapse)
+    })
+
+    it('should return new instance when there is no collapse instance with given configuration', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+
+      expect(Collapse.getInstance(div)).toEqual(null)
+      const collapse = Collapse.getOrCreateInstance(div, {
+        toggle: false
+      })
+      expect(collapse).toBeInstanceOf(Collapse)
+
+      expect(collapse._config.toggle).toEqual(false)
+    })
+
+    it('should return the instance when exists without given configuration', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+      const collapse = new Collapse(div, {
+        toggle: false
+      })
+      expect(Collapse.getInstance(div)).toEqual(collapse)
+
+      const collapse2 = Collapse.getOrCreateInstance(div, {
+        toggle: true
+      })
+      expect(collapse).toBeInstanceOf(Collapse)
+      expect(collapse2).toEqual(collapse)
+
+      expect(collapse2._config.toggle).toEqual(false)
     })
   })
 })

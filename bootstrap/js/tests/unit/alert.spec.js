@@ -15,8 +15,25 @@ describe('Alert', () => {
     clearFixture()
   })
 
+  it('should take care of element either passed as a CSS selector or DOM element', () => {
+    fixtureEl.innerHTML = '<div class="alert"></div>'
+
+    const alertEl = fixtureEl.querySelector('.alert')
+    const alertBySelector = new Alert('.alert')
+    const alertByElement = new Alert(alertEl)
+
+    expect(alertBySelector._element).toEqual(alertEl)
+    expect(alertByElement._element).toEqual(alertEl)
+  })
+
   it('should return version', () => {
     expect(typeof Alert.VERSION).toEqual('string')
+  })
+
+  describe('DATA_KEY', () => {
+    it('should return plugin data key', () => {
+      expect(Alert.DATA_KEY).toEqual('bs.alert')
+    })
   })
 
   describe('data-api', () => {
@@ -117,7 +134,7 @@ describe('Alert', () => {
       const alertEl = document.querySelector('.alert')
       const alert = new Alert(alertEl)
 
-      expect(Alert.getInstance(alertEl)).toBeDefined()
+      expect(Alert.getInstance(alertEl)).not.toBeNull()
 
       alert.dispose()
 
@@ -152,7 +169,7 @@ describe('Alert', () => {
 
       jQueryMock.fn.alert.call(jQueryMock, 'close')
 
-      expect(Alert.getInstance(alertEl)).toBeDefined()
+      expect(Alert.getInstance(alertEl)).not.toBeNull()
       expect(fixtureEl.querySelector('.alert')).toBeNull()
     })
 
@@ -166,7 +183,7 @@ describe('Alert', () => {
 
       jQueryMock.fn.alert.call(jQueryMock)
 
-      expect(Alert.getInstance(alertEl)).toBeDefined()
+      expect(Alert.getInstance(alertEl)).not.toBeNull()
       expect(fixtureEl.querySelector('.alert')).not.toBeNull()
     })
   })
@@ -188,6 +205,28 @@ describe('Alert', () => {
       const div = fixtureEl.querySelector('div')
 
       expect(Alert.getInstance(div)).toEqual(null)
+    })
+  })
+
+  describe('getOrCreateInstance', () => {
+    it('should return alert instance', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+      const alert = new Alert(div)
+
+      expect(Alert.getOrCreateInstance(div)).toEqual(alert)
+      expect(Alert.getInstance(div)).toEqual(Alert.getOrCreateInstance(div, {}))
+      expect(Alert.getOrCreateInstance(div)).toBeInstanceOf(Alert)
+    })
+
+    it('should return new instance when there is no alert instance', () => {
+      fixtureEl.innerHTML = '<div></div>'
+
+      const div = fixtureEl.querySelector('div')
+
+      expect(Alert.getInstance(div)).toEqual(null)
+      expect(Alert.getOrCreateInstance(div)).toBeInstanceOf(Alert)
     })
   })
 })

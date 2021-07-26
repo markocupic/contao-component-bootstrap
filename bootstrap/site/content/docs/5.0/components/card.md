@@ -398,7 +398,7 @@ Using a combination of grid and utility classes, cards can be made horizontal in
 <div class="card mb-3" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4">
-      {{< placeholder width="100%" height="250" text="Image" >}}
+      {{< placeholder width="100%" height="250" text="Image" class="img-fluid rounded-start" >}}
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -721,3 +721,9 @@ Just like with card groups, card footers will automatically line up.
 ### Masonry
 
 In `v4` we used a CSS-only technique to mimic the behavior of [Masonry](https://masonry.desandro.com/)-like columns, but this technique came with lots of unpleasant [side effects](https://github.com/twbs/bootstrap/pull/28922). If you want to have this type of layout in `v5`, you can just make use of Masonry plugin. **Masonry is not included in Bootstrap**, but we've made a [demo example]({{< docsref "/examples/masonry" >}}) to help you get started.
+
+## Sass
+
+### Variables
+
+{{< scss-docs name="card-variables" file="scss/_variables.scss" >}}

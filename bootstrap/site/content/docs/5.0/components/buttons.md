@@ -193,6 +193,23 @@ var bsButton = new bootstrap.Button(button)
         Destroys an element's button. (Removes stored data on the DOM element)
       </td>
     </tr>
+    <tr>
+      <td>
+        <code>getInstance</code>
+      </td>
+      <td>
+        Static method which allows you to get the button instance associated to a DOM element, you can use it like this: <code>bootstrap.Button.getInstance(element)</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>getOrCreateInstance</code>
+      </td>
+      <td>
+        Static method which returns a button instance associated to a DOM element or create a new one in case it wasn't initialised.
+        You can use it like this: <code>bootstrap.Button.getOrCreateInstance(element)</code>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -205,3 +222,25 @@ buttons.forEach(function (button) {
   button.toggle()
 })
 ```
+
+## Sass
+
+### Variables
+
+{{< scss-docs name="btn-variables" file="scss/_variables.scss" >}}
+
+### Mixins
+
+There are three mixins for buttons: button and button outline variant mixins (both based on `$theme-colors`), plus a button size mixin.
+
+{{< scss-docs name="btn-variant-mixin" file="scss/mixins/_buttons.scss" >}}
+
+{{< scss-docs name="btn-outline-variant-mixin" file="scss/mixins/_buttons.scss" >}}
+
+{{< scss-docs name="btn-size-mixin" file="scss/mixins/_buttons.scss" >}}
+
+### Loops
+
+Button variants (for regular and outline buttons) use their respective mixins with our `$theme-colors` map to generate the modifier classes in `scss/_buttons.scss`.
+
+{{< scss-docs name="btn-variant-loops" file="scss/_buttons.scss" >}}
