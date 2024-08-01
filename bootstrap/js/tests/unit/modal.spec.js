@@ -1,7 +1,9 @@
-import Modal from '../../src/modal'
-import EventHandler from '../../src/dom/event-handler'
-import ScrollBarHelper from '../../src/util/scrollbar'
-import { clearBodyAndDocument, clearFixture, createEvent, getFixture, jQueryMock } from '../helpers/fixture'
+import EventHandler from '../../src/dom/event-handler.js'
+import Modal from '../../src/modal.js'
+import ScrollBarHelper from '../../src/util/scrollbar.js'
+import {
+  clearBodyAndDocument, clearFixture, createEvent, getFixture, jQueryMock
+} from '../helpers/fixture.js'
 
 describe('Modal', () => {
   let fixtureEl
@@ -734,6 +736,36 @@ describe('Modal', () => {
       })
     })
 
+    it('should not close modal when clicking on an element removed from modal content', () => {
+      return new Promise(resolve => {
+        fixtureEl.innerHTML = [
+          '<div class="modal">',
+          ' <div class="modal-dialog">',
+          '   <button class="btn">BTN</button>',
+          ' </div>',
+          '</div>'
+        ].join('')
+
+        const modalEl = fixtureEl.querySelector('.modal')
+        const buttonEl = modalEl.querySelector('.btn')
+        const modal = new Modal(modalEl)
+
+        const spy = spyOn(modal, 'hide')
+        buttonEl.addEventListener('click', () => {
+          buttonEl.remove()
+        })
+
+        modalEl.addEventListener('shown.bs.modal', () => {
+          modalEl.dispatchEvent(createEvent('mousedown'))
+          buttonEl.click()
+          expect(spy).not.toHaveBeenCalled()
+          resolve()
+        })
+
+        modal.show()
+      })
+    })
+
     it('should do nothing is the modal is not shown', () => {
       fixtureEl.innerHTML = '<div class="modal"><div class="modal-dialog"></div></div>'
 
@@ -959,6 +991,35 @@ describe('Modal', () => {
         trigger.click()
       })
     })
+
+    it('should open modal, having special characters in its id', () => {
+      return new Promise(resolve => {
+        fixtureEl.innerHTML = [
+          '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#j_id22:exampleModal">',
+          '   Launch demo modal',
+          '</button>',
+          '<div class="modal fade" id="j_id22:exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">',
+          '  <div class="modal-dialog">',
+          '    <div class="modal-content">',
+          '      <div class="modal-body">',
+          '        <p>modal body</p>',
+          '      </div>',
+          '    </div>',
+          '  </div>',
+          '</div>'
+        ].join('')
+
+        const modalEl = fixtureEl.querySelector('.modal')
+        const trigger = fixtureEl.querySelector('[data-bs-toggle="modal"]')
+
+        modalEl.addEventListener('shown.bs.modal', () => {
+          resolve()
+        })
+
+        trigger.click()
+      })
+    })
+
     it('should not prevent default when a click occurred on data-bs-dismiss="modal" where tagName is DIFFERENT than <a> or <area>', () => {
       return new Promise(resolve => {
         fixtureEl.innerHTML = [
